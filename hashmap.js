@@ -107,7 +107,6 @@ function main() {
 	for(let i=0; i<lorObj.length; i++) {
 		lor.set(lorObj[i]["key"], lorObj[i]["value"]);
 		let node = lor.get(lorObj[i]["key"]);
-		console.log(node);
 		node = node ? node.values : null;
 		if(node) {
 			str = `${lorObj[i]["key"]}-> ${node.data}`;
@@ -120,6 +119,9 @@ function main() {
 		}
 	}
 
+	console.log(canBePalindrome("acecarr"));
+	strs = ['east', 'cars', 'acre', 'arcs', 'teas', 'eats', 'race'];
+	groupAnagrams(strs);
 }
 
 // any permutation a palindrome
@@ -130,14 +132,23 @@ function canBePalindrome(str) {
 	let counter = 0;
 	let hasOdd = false;
 	for(let i=0; i<str.length; i++) {
-		map.set(str[i], 1);
+		let node = map.get(str[i]);
+		if(node) {
+			let temp = new _Node(node.values.data, null);
+			temp.data += 1;
+			map.remove(str[i]);
+			map.set(str[i], temp.data);
+		} else {
+			map.set(str[i], 1);
+		}
 	}
 	for(let i=0; i<str.length; i++) {
 		let vals = map.get(str[i]);
-		while(vals.next !== null) {
-			counter++;
-			vals = vals.next;
-		}
+		counter = vals.values.data;
+		// while(vals.next !== null) {
+		// 	counter++;
+		// 	vals = vals.next;
+		// }
 		if(counter%2 !== 0) {
 			if(hasOdd) {
 				return false;
@@ -145,6 +156,60 @@ function canBePalindrome(str) {
 				hasOdd = true;
 			}
 		}
+	}
+	return true;
+}
+
+function groupAnagrams(strings) {
+	let parMap, tempMap;
+	let grouping = [];
+	let tempGroup = [];
+	let groupings = [];
+	for(let i=0; i<strings.length; i++) {
+		parMap = new HashMap();
+		for(let j=0; j<strings[i].length; j++) {
+			tempMap = parMap.get(strings[i][j]);
+			if(tempMap) {
+				parMap.set(strings[i][j], tempMap.values.data+1);
+			} else {
+				parMap.set(strings[i][j], 1);
+			}
+		}
+		// console.log(JSON.stringify(parMap));
+		strings[i] = {key: strings[i], map: parMap};
+		grouping.push(strings[i].key);
+	}
+	
+	for(let i=0; i<grouping.length; i++) {
+		if(grouping[i] !== "") {
+			tempGroup = [grouping[i]];
+			// let map = strings[i].map;
+			// let str = strings[i].key;
+			for(let j=0; j<grouping.length; j++) {
+				if(i !== j && grouping[j] !== "") {
+					if(compareMaps(strings[i], strings[j])) {
+						tempGroup.push(grouping[j]);
+						grouping[j] = "";
+					}
+				}
+			}
+			groupings.push([...tempGroup]);
+		}
+	}
+	console.log(groupings);
+}
+
+function compareMaps(word1, word2) {
+	let char, count=0;
+	while(count < word1.key.length) {
+		char = word1.key[count];
+		let data1 = word1.map.get(char);
+		let data2 = word2.map.get(char);
+
+		if(!data1 || !data2 || data1.data !== data2.data) {
+			return false;
+		}
+		count++;
 	}
 	return true;
 }

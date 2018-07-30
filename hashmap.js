@@ -1,3 +1,10 @@
+class _Node {
+	constructor(data, next) {
+		this.data = data;
+		this.next = next;
+	}
+}
+
 class HashMap {
 	constructor(initialCapacity=8) {
 		this.length = 0;
@@ -9,9 +16,9 @@ class HashMap {
 	get(key) {
 		const index = this._findSlot(key);
 		if(this._slots[index] === undefined) {
-			throw new Error('Key error');
+			return null;
 		}
-		return this._slots[index].value;
+		return this._slots[index];
 	}
 
 	set(key, value) {
@@ -21,11 +28,23 @@ class HashMap {
 			this._resize(this._capacity * HashMap.SIZE_RATIO);
 		}
 		const index = this._findSlot(key);
-		this._slots[index] = {
-			key,
-			value
-		};
-		this.length++;
+		if(this._slots[index] === undefined) {
+			this._slots[index] = {
+				key,
+				values: new _Node(value, null)
+			};
+			this.length++;
+		} else {
+			let node = this._slots[index].values;
+			let newHead = new _Node(value, null);
+			newHead.next = node;
+			// console.log(newHead);
+			this._slots[index] = {
+				key,
+				values: newHead
+			};
+			// console.log(this._slots[index]);
+		}
 	}
 
 	remove(key) {
@@ -78,13 +97,56 @@ class HashMap {
 HashMap.MAX_LOAD_RATIO = 0.9;
 HashMap.SIZE_RATIO = 3;
 
-let lorObj = [
-	{Hobbit:"Bilbo"}, {Hobbit:"Frodo"}, {Wizard:"Gandolf"}, {Human:"Aragon"}, {Elf: "Legolas"}, {Maiar:"The Necromancer"}, {Maiar: "Sauron"}, {RingBearer: "Gollum"}, {LadyOfLight: "Galadriel"}, {HalfElven: "Arwen"}, {Ent: "Treebeard"}
-];
+const lorObj = [{key: "Hobbit", value: "Bilbo"}, {key: "Hobbit", value: "Frodo"}, {key: "Wizard", value: "Gandolf"}, {key: "Human", value: "Aragon"}, {key: "Elf", value: "Legolas"}, {key: "Maiar", value: "The Necromancer"}, {key: "Maiar", value: "Sauron"}, {key: "RingBearer", value: "Gollum"}, {key: "LadyOfLight", value: "Galadriel"}, {key: "HalfElven", value: "Arwen"}, {key: "Ent", value: "Treebeard"}];
 
-let lor = new HashMap();
-let key;
-for(let i=0; i<lorObj.length; i++) {
-	key = Object.keys(lorObj[i])[0];
-	lor.set(key, lorObj[key]);
+function main() {
+	// create hashmap class and get value at "Maiar"
+	let lor = new HashMap();
+	let key, temp;
+	let str = "";
+	for(let i=0; i<lorObj.length; i++) {
+		lor.set(lorObj[i]["key"], lorObj[i]["value"]);
+		let node = lor.get(lorObj[i]["key"]);
+		console.log(node);
+		node = node ? node.values : null;
+		if(node) {
+			str = `${lorObj[i]["key"]}-> ${node.data}`;
+			node = node.next;
+			while(node !== null) {
+				str += ` -> ${node.data}`;
+				node = node.next;
+			}
+			// console.log(str);
+		}
+	}
+
 }
+
+// any permutation a palindrome
+
+
+function canBePalindrome(str) {
+	let map = new HashMap();
+	let counter = 0;
+	let hasOdd = false;
+	for(let i=0; i<str.length; i++) {
+		map.set(str[i], 1);
+	}
+	for(let i=0; i<str.length; i++) {
+		let vals = map.get(str[i]);
+		while(vals.next !== null) {
+			counter++;
+			vals = vals.next;
+		}
+		if(counter%2 !== 0) {
+			if(hasOdd) {
+				return false;
+			} else {
+				hasOdd = true;
+			}
+		}
+	}
+	return true;
+}
+
+main();

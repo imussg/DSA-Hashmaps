@@ -121,7 +121,7 @@ function main() {
 
 	console.log(canBePalindrome("acecarr"));
 	strs = ['east', 'cars', 'acre', 'arcs', 'teas', 'eats', 'race'];
-	groupAnagrams(strs);
+	console.log({"ANAGRAM_GROUPING": groupAnagrams(strs)});
 }
 
 // any permutation a palindrome
@@ -196,7 +196,7 @@ function groupAnagrams(strings) {
 			groupings.push([...tempGroup]);
 		}
 	}
-	console.log(groupings);
+	return groupings;
 }
 
 function compareMaps(word1, word2) {

@@ -1,3 +1,5 @@
+const lorObj = [{key: "Hobbit", value: "Bilbo"}, {key: "Hobbit", value: "Frodo"}, {key: "Wizard", value: "Gandolf"}, {key: "Human", value: "Aragon"}, {key: "Elf", value: "Legolas"}, {key: "Maiar", value: "The Necromancer"}, {key: "Maiar", value: "Sauron"}, {key: "RingBearer", value: "Gollum"}, {key: "LadyOfLight", value: "Galadriel"}, {key: "HalfElven", value: "Arwen"}, {key: "Ent", value: "Treebeard"}];
+
 class _Node {
 	constructor(data, next) {
 		this.data = data;
@@ -96,8 +98,6 @@ class HashMap {
 
 HashMap.MAX_LOAD_RATIO = 0.9;
 HashMap.SIZE_RATIO = 3;
-
-const lorObj = [{key: "Hobbit", value: "Bilbo"}, {key: "Hobbit", value: "Frodo"}, {key: "Wizard", value: "Gandolf"}, {key: "Human", value: "Aragon"}, {key: "Elf", value: "Legolas"}, {key: "Maiar", value: "The Necromancer"}, {key: "Maiar", value: "Sauron"}, {key: "RingBearer", value: "Gollum"}, {key: "LadyOfLight", value: "Galadriel"}, {key: "HalfElven", value: "Arwen"}, {key: "Ent", value: "Treebeard"}];
 
 function main() {
 	// create hashmap class and get value at "Maiar"
